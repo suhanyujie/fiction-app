@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<script src="js/jquery-3.2.1.min.js"></script>
+		<script src="js/mui.js"></script>
+		<script>
+			const baseUrl = 'http://dd.japanapi.com:8002'
+			mui.init()
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">标题</h1>
+		</header>
+		<div class="mui-content body">
+			<span>加载中。。。</span>
+		</div>
+		<script type="text/javascript">
+			var param = location.hostname | "id=1"
+			$(function(){
+				// $('.body').html(param);
+				// 根据id值,发起post请求,查询小说列表
+				$.ajax({
+					url:baseUrl+'/index.php?p=1',
+					type:'post',
+					success:function(data){
+						data = JSON.parse(data)
+						if (data.status != 1) {
+							mui.alert("接口请求失败！", "提示信息")
+							return;
+						}
+						var htmlArr = [];
+						var tmpData;
+						for (var i=0,max=data.data.length;i<max;i++) {
+							tmpData = data.data[i]
+							htmlArr[i] = '<li class="mui-table-view-cell">\
+											<a class="mui-navigate-right" href="'+tmpData.url+'">'+tmpData.name+'</a>\
+										</li>';
+						}
+						$('.body').html(htmlArr.join(''));
+					},
+					error:function(err){
+						mui.alert("异常",'提示')
+					}
+				})
+			})
+		</script>
+	</body>
+</html>
